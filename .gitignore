@@ -1,0 +1,16 @@
+# Ignore model artifacts
+model/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# MLflow tracking files
+mlruns/
+
+# OS files
+.DS_Store
+Thumbs.db
