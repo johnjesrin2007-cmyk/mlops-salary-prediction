@@ -4,7 +4,6 @@ from prefect import flow
 import mlflow
 
 mlflow.set_tracking_uri("file:./mlruns")
-mlflow.set_experiment("salary-prediction")   # 🔥 REQUIRED FIX
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
