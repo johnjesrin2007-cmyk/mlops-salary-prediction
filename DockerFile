@@ -1,18 +1,16 @@
 FROM python:3.10-slim
 
-WORKDIR /app
+WORKDIR /opt/render/project/src   # 🔥 MATCH RENDER PATH
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Train model
+RUN python -m pipeline.training_pipeline
 
-# 🔥 Run training pipeline during build
-RUN python pipeline/training_pipeline.py
-
-# 🔍 Debug (optional but useful)
+# Debug (optional)
 RUN echo "Checking model..." && ls -R model
-
-EXPOSE 10000
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
