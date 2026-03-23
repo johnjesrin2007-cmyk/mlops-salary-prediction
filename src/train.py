@@ -12,17 +12,17 @@ def train_model(X,y):
 
     with mlflow.start_run():
 
-     model= LinearRegression()
+      model= LinearRegression()
 
-     model.fit(X_train,y_train)
+      model.fit(X_train,y_train)
 
-     y_pred=model.predict(X_test)
+      y_pred=model.predict(X_test)
 
-     r2=r2_score(y_test,y_pred)
+      r2=r2_score(y_test,y_pred)
 
-     mlflow.log_metric("r2_score",r2)
+      mlflow.log_metric("r2_score",r2)
 
-     mlflow.sklearn.log_model(model,"model")
+      mlflow.sklearn.log_model(model,"model")
 
     os.makedirs("model",exist_ok=True)
     joblib.dump(model,"model/model.pkl")

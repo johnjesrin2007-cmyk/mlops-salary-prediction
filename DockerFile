@@ -7,8 +7,11 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# 🔥 Train model inside container
+# 🔥 Run training pipeline during build
 RUN python pipeline/training_pipeline.py
+
+# 🔍 Debug (optional but useful)
+RUN echo "Checking model..." && ls -R model
 
 EXPOSE 10000
 

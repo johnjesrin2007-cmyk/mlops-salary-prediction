@@ -4,6 +4,7 @@ from prefect import flow
 import mlflow
 
 mlflow.set_tracking_uri("file:./mlruns")
+mlflow.set_experiment("salary-prediction")   # 🔥 REQUIRED FIX
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -15,7 +16,7 @@ from src.train import train_model
 @flow(name="ML Training Pipeline")
 def training_pipeline():
 
-    data_path = "data/raw.csv"  # ✅ correct dataset path
+    data_path = "data/raw.csv"
 
     # Preprocessing
     X, y = preprocess_data(
