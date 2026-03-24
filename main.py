@@ -6,13 +6,20 @@ import numpy as np
 
 app = FastAPI(title="ML Model API")
 
-MODEL_PATH = "model/model.pkl"
+# 🔥 Get absolute base directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Load model
-if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError("Model not found. Make sure training ran successfully.")
+# 🔥 Correct model path
+MODEL_PATH = os.path.join(BASE_DIR, "model", "model.pkl")
 
-model = joblib.load(MODEL_PATH)
+# 🔥 Load model safely
+model = None
+
+if os.path.exists(MODEL_PATH):
+    model = joblib.load(MODEL_PATH)
+    print(f"✅ Model loaded from: {MODEL_PATH}")
+else:
+    print(f"❌ Model not found at: {MODEL_PATH}")
 
 
 # Input schema
@@ -33,6 +40,11 @@ def home():
 
 @app.post("/predict")
 def predict(data: InputData):
+
+    # 🔥 Handle missing model gracefully
+    if model is None:
+        return {"error": "Model not loaded. Training might have failed."}
+
     try:
         input_array = np.array([[
             data.age,

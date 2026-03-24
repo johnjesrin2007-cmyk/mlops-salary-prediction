@@ -6,30 +6,35 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
-def train_model(X,y):
+def train_model(X, y):
 
-    X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=42)
+    # 🔹 Set MLflow
+    mlflow.set_tracking_uri("file:./mlruns")
+    mlflow.set_experiment("salary-prediction")
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.3, random_state=42
+    )
 
     with mlflow.start_run():
 
-      model= LinearRegression()
+        model = LinearRegression()
+        model.fit(X_train, y_train)
 
-      model.fit(X_train,y_train)
+        y_pred = model.predict(X_test)
+        r2 = r2_score(y_test, y_pred)
 
-      y_pred=model.predict(X_test)
+        mlflow.log_metric("r2_score", r2)
+        mlflow.sklearn.log_model(model, "model")
 
-      r2=r2_score(y_test,y_pred)
+    # 🔥 CRITICAL FIX (absolute path)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_dir = os.path.join(BASE_DIR, "model")
 
-      mlflow.log_metric("r2_score",r2)
+    os.makedirs(model_dir, exist_ok=True)
 
-      mlflow.sklearn.log_model(model,"model")
+    model_path = os.path.join(model_dir, "model.pkl")
+    joblib.dump(model, model_path)
 
-    os.makedirs("model",exist_ok=True)
-    joblib.dump(model,"model/model.pkl")
-
-    
-    print("Model Saved to model/model.pkl successfully")
-
-
-
+    print(f"✅ Model saved at: {model_path}")
 

@@ -7,7 +7,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Train model during build
-RUN python -m pipeline.training_pipeline
+# 🔥 Run training (this creates model.pkl)
+RUN python pipeline/training_pipeline.py
 
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+# Debug
+RUN echo "Checking model..." && ls -R model
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
