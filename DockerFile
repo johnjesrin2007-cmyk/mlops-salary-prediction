@@ -7,10 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# 🔥 Run training (this creates model.pkl)
+# 🔥 This MUST run
 RUN python pipeline/training_pipeline.py
-
-# Debug
-RUN echo "Checking model..." && ls -R model
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
